@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>流式问答</title>
+    <style>
+        pre {
+            white-space: pre-wrap;
+            font-family: Consolas, "Microsoft YaHei";
+        }
+    </style>
+</head>
+<body>
+<h2>请输入问题：</h2>
+<input type="text" id="question" size="50">
+<button id="submitBtn">提交</button>
+
+<pre id="output"></pre>
+
+<script>
+let evtSource = null;
+const btn = document.getElementById("submitBtn");
+const output = document.getElementById("output");
+
+btn.addEventListener("click", () => {
+    const question = document.getElementById("question").value.trim();
+    if (!question) {
+        alert("请输入问题！");
+        return;
+    }
+
+    // 防止重复提交
+    if (evtSource) {
+        evtSource.close();
+        evtSource = null;
+    }
+
+    // 禁用按钮防抖
+    btn.disabled = true;
+    output.textContent = "正在生成回答...\n";
+
+    evtSource = new EventSource("http://127.0.0.1:5000/api/ask?question=" + encodeURIComponent(question));
+
+    evtSource.onmessage = function(event) {
+        if (event.data === "[DONE]") {
+            output.textContent += "\n--- 回答结束 ---";
+            evtSource.close();
+            evtSource = null;
+            btn.disabled = false;  // 重新启用按钮
+        } else if (event.data.startsWith("[ERROR]")) {
+            output.textContent += "\n⚠️ " + event.data;
+            evtSource.close();
+            evtSource = null;
+            btn.disabled = false;
+        } else {
+            output.textContent += event.data;
+        }
+    };
+
+    evtSource.onerror = function() {
+        output.textContent += "\n❌ 连接错误，已断开。";
+        evtSource.close();
+        evtSource = null;
+        btn.disabled = false;
+    };
+});
+</script>
+</body>
+</html>
