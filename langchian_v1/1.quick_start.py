@@ -8,7 +8,7 @@ os.environ["LANGSMITH_PROJECT"]="learn_langchain_rag"
 os.environ["LANGSMITH_ENDPOINT"]="https://api.smith.langchain.com"
 if not os.environ.get("DEEPSEEK_API_KEY"):
     os.environ["DEEPSEEK_API_KEY"] = "***REMOVED***a6e1ed1bc0354c6f848a672c36fa3240"
-# 目的实用的天气预报代理
+# 目的:实用的天气预报代理
 # 整体步骤为
 # 2. 设计详细的系统提示词来改善agent的行为（Detailed system prompts）
 # 3.创建与外部数据集成的工具（Create tools）
@@ -38,7 +38,7 @@ from dataclasses import dataclass
 from langchain.tools import tool,ToolRuntime
 """将 Python 函数转换为工具（Tool），可带参数或不带参数使用。
 
-    参数说明:
+    @tool参数说明:
         name_or_callable: 工具的名称或要转换的可调用对象（callable）。
             必须以位置参数的形式提供。
         runnable: 可选的可运行对象（runnable），用于转换为工具。
@@ -97,7 +97,9 @@ class Context:
     """自定义运行时上下文模式。"""
     user_id: str
 
-"""运行时上下文会自动注入到工具中。
+"""
+    ToolRuntime说明：
+    运行时上下文会自动注入到工具中。
 
     当一个工具函数包含名为 `tool_runtime` 且类型标注为 `ToolRuntime` 的参数时，
     工具执行系统会自动注入一个实例，其中包含：
@@ -155,8 +157,11 @@ def get_user_location(runtime: ToolRuntime[Context]) -> str:
 # ===============================3.配置模型========================
 from langchain.chat_models import init_chat_model
 
-"""使用模型名称和提供商，在一行中初始化一个聊天模型。
-
+"""使用统一接口从任意支持的提供商初始化一个聊天模型。
+（主要有两种使用场景：）
+ 1. （固定模型——预先指定模型，直接获得可用的聊天模型。）
+ 2. （可配置模型——可在运行时通过 `config` 指定参数（包括模型名称），
+        使得可以在不同模型或提供商之间轻松切换，而无需修改代码。）
 !!! note
     需要安装对应模型提供商的集成包。
 
