@@ -326,6 +326,15 @@ def chat(question):
         print(f"回答失败{e}")
         yield f"data: [ERROR] {str(e)}\n\n"
 
+
+
+def chat(question):
+    try:
+        return agent.invoke(question)
+    except Exception as e:
+        print(f"回答失败{e}")
+        return  "错误"
+
 # if __name__ == '__main__':
 #
 #     chat("在临床新技术实行分级分类准入管理制度中进行质量控制，项目组质控小组由什么人员组成？")
