@@ -75,7 +75,7 @@ def find_all_files(input_path:str)->list:
     except Exception as e:
         logger.error(f"{e}")
 
-# todo 由于本项目中miner u处理速度较慢且部分不准确，但是官网很快且准确，猜测gp的原因，后续在其他机器上试试
+# todo 由于本项目中miner u处理速度较慢且部分不准确，但是官网很快且准确，猜测gpu的原因，后续在其他机器上试试
 def do_parse(
     output_dir,  # Output directory for storing parsing results
     pdf_file_names: list[str],  # List of PDF file names to be parsed
