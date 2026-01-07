@@ -35,7 +35,7 @@ import time
 #
 # model = BGEM3FlagModel(model_name_or_path = r"D:\files\models\bge-m3", use_fp16=False)
 # start_time= time.time()
-# output = model.encode("hi this is harrison",return_dense=True, return_sparse=False, return_colbert_vecs=False)
+# output = model.encode("hi this is harrison",return_dense=True, return_sparse=True, return_colbert_vecs=True)
 # print(output)
 # print(output.keys())
 # print(f"花费时间{time.time()-start_time}")
@@ -71,11 +71,29 @@ import time
 # # embedding.embed_query(contents)
 # embedding.embed_documents(contents)
 
-from langchain_ollama import OllamaEmbeddings # 失败了，估计是因为ollama 版本问题
-embedding = OllamaEmbeddings(model='bge-m3:latest',base_url='http://localhost:11434')
-contents = "hi this is harrison"
+# from langchain_ollama import OllamaEmbeddings # 失败了，估计是因为ollama 版本问题
+# embedding = OllamaEmbeddings(model='bge-m3:latest',base_url='http://localhost:11434')
+# contents = "hi this is harrison"
+# start_time = time.time()
+# result = embedding.embed_query(contents)
+# print(result)
+# # embedding.embed_documents(contents)
+# print(f"花费时间{time.time() - start_time}")
+
+
+import requests
+import json
 start_time = time.time()
-result = embedding.embed_query(contents)
-print(result)
-# embedding.embed_documents(contents)
+url = "http://localhost:11434/api/embeddings"
+
+payload = {
+    "model": "bge-m3",
+    "prompt": "hi this is harrison"
+}
+resp = requests.post(url, json=payload)
+
+vec = resp.json()["embedding"]
+
+print(len(vec))
+print(vec[:5])
 print(f"花费时间{time.time() - start_time}")

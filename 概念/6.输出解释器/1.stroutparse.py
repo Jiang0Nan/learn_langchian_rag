@@ -1,6 +1,6 @@
 import os
 
-from lear_langchain.chat_models import init_chat_model
+from langchain.chat_models import init_chat_model
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.tools import tool
 

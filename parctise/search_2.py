@@ -223,7 +223,7 @@ def kb_prompt(kbinfos, max_tokens, hash_id=False):
 
 @dynamic_prompt
 def prompt_with_context(request: ModelRequest) -> str:
-    """Inject context into state messages."""
+
     last_query = request.state["messages"][-1].text
     question = re.sub(r"（.*?）", "", last_query)
     retrieval_result = retrieval(question,embedding_model,compressor,milvus=milvus,collection_name=collection_name)
